@@ -7,7 +7,7 @@ output: html_document
 
 Abstract:
 
-This is a technical blog post of both an HTML file and [.qmd file](wine_of_pnw1-19.qmd) hosted on GitHub pages.
+This is a technical blog post of **both** an HTML file *and* [.qmd file](src/wine_of_pnw1-19.qmd) hosted on GitHub pages. 
 
 **Step Up Code:**
 ```{r}
