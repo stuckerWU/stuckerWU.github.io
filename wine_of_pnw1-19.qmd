@@ -1,0 +1,113 @@
+---
+title: "Wines of the PNW"
+author: "Summer Tucker"
+date: "2025-01-27"
+output: html_document
+---
+
+Abstract:
+
+This is a technical blog post of both an HTML file and .qmd file hosted on GitHub pages.
+
+**Step Up Code:**
+```{r}
+library(tidyverse)
+
+wine <- readRDS(gzcon(url("https://github.com/cd-public/DSLM-505/raw/master/dat/wine.rds"))) %>%
+  filter(province=="Oregon" | province=="California" | province=="New York") %>% 
+  mutate(cherry=as.integer(str_detect(description,"[Cc]herry"))) %>% 
+  mutate(lprice=log(price)) %>% 
+  select(lprice, points, cherry, province)
+```
+
+**Explanation:**
+
+> <span style="color:red;font-weight:bold">TODO</span>: *In order, the code:(1) Reads in the data file from a url, (2) filters the data set to only Oregon, California, and New York, (3) Creates a column named cherry, filled with an integer value based on whether the term Cherry or cherry appears in the description column, (4) Creates a column named lprice, which is the log of the value in the price column, and (5) Narrows to only select 4 columns: lprice, points, cherry, and province.*
+
+# Multiple Regression
+
+## Linear Models
+
+First run a linear regression model with log of price as the dependent variable and 'points' and 'cherry' as features (variables).
+
+```{r}
+# TODO: hint: m1 <- lm(lprice ~ points + cherry)
+
+m1 <- lm(lprice~points+cherry, data=wine)
+sqrt(mean(m1$residuals^2))
+```
+
+**Explanation:**
+
+> <span style="color:red;font-weight:bold">TODO</span>: *The first line of code creates a linear regression model that predicts the lprice value based on the points and cherry data, using the wine dataset as a basis for the model. The next line calculates the RMSE, which is the root mean square error of the residuals from the model.*
+
+> <span style="color:red;font-weight:bold">TODO</span>: *The RMSE is ~0.47. RMSE is a measure of the average difference between the values that the model predicts, and the actual values in the dataset.This is a metric for the accuracy of the predicted values. Since the RMSE is quite low, the RMSE in this case indicates the predicted values were quite accurate.
+Source: https://statisticsbyjim.com/regression/root-mean-square-error-rmse/
+Source: https://www.statology.org/extract-rmse-from-lm-in-r/ *
+
+## Interaction Models
+
+Add an interaction between 'points' and 'cherry'. 
+
+```{r}
+# TODO: hint: Check the slides.
+m2 <- lm(lprice~points*cherry, data=wine)
+sqrt(mean(m2$residuals^2))
+```
+
+> <span style="color:red;font-weight:bold">TODO</span>: *The first line of code creates a linear regression model that predicts the lprice value based on the points and cherry data, using the wine dataset as a basis for the model. This model is set up assuming that the wine and cherry variables affect each other (an interaction). The next line calculates the RMSE, which is the root mean square error of the residuals from the model.*
+
+> <span style="color:red;font-weight:bold">TODO</span>: *The RMSE is ~0.47.Since the RMSE is quite low, the RMSE in this case indicates the predicted values were quite accurate.However, RMSE in this case is not signficantly different than the RMSE for the first model.*
+
+### The Interaction Variable
+
+> <span style="color:red;font-weight:bold">TODO</span>: *interpret the coefficient on the interaction variable.* <br>[Explain as you would to a non-technical manager.] *The coefficient variable indicates how strongly a variable influences the model. Additionally, this model is also accounts for how the cherry and points variables affect each other, and thus affect the price. The coefficient for the impact of cherry and points together combined (as opposed being separate) is ~ 0.0127. This coefficient is very low and indicates that the cherry and points variables don't have much influence on each other.*
+
+## Applications
+
+Determine which province (Oregon, California, or New York), does the 'cherry' feature in the data affect price most?
+
+```{r}
+wineOR <- wine %>% filter(province=="Oregon")
+cherrymodel1 <- lm(lprice~cherry, data=wineOR)
+summary(cherrymodel1)
+
+wineCA <- wine %>% filter(province=="California")
+cherrymodel2 <- lm(lprice~cherry, data=wineCA)
+summary(cherrymodel2)
+
+wineNY <- wine %>% filter(province=="New York")
+cherrymodel3 <- lm(lprice~cherry, data=wineNY)
+summary(cherrymodel3)
+  
+```
+
+> <span style="color:red;font-weight:bold">TODO</span>: *For each of the three chunks, the first line filters the data to just examine the state in question (Oregon, California, etc.) The next line creates a linear model that examines the relationship between cherry and price. The third line uses the function summary to get information about the model, incuding the coefficients for each variable. Looking at the coefficient for the cherry variable, for Oregon, the coefficient is about 0.30, while for California and New York, it is about 0.18 and 0.17, respectively. Thus, though the cherry variable seems to have limited effect on all of the models, it seems to have greater effect in the Oregon model.*
+
+# Scenarios
+
+## On Accuracy
+
+Imagine a model to distinguish New York wines from those in California and Oregon. After a few days of work, you take some measurements and note: "I've achieved 91% accuracy on my model!" 
+
+Should you be impressed? Why or why not?
+
+```{r}
+# TODO: Use simple descriptive statistics from the data to justify your answer.
+
+```
+
+> <span style="color:red;font-weight:bold">TODO</span>: *You should be initially impressed, but investigate further. If we define accuracy broadly (e.g., saying anything within 3 standard deviations is accurate), it would be really easy for a model to be considered accurate. So, you need to consider what you consider to be in the range of "accurate" before concluding that your model is doing well.*
+
+## On Ethics
+
+Why is understanding this vignette important to use machine learning in an ethical manner?
+
+> <span style="color:red;font-weight:bold">TODO</span>: *This vignette deals with seemingly innoucous variables, but if replaced with different topic, and different variables, the possible implications could be much more significant. For example, consider a model that predicts whether an a person will be convicted by a jury, dependent on certain variables. Many kinds of variables could influence the outcome, some of which are independent, while other variables influence each other. The knowledge of how a variable affects an outcome is neutral on the face, but susceptible to being used in an unethical manner.*
+
+## Ignorance is no excuse
+Imagine you are working on a model to predict the likelihood that an individual loses their job as the result of the changing federal policy under new presidential administrations. You have a very large dataset with many hundreds of features, but you are worried that including indicators like age, income or gender might pose some ethical problems. When you discuss these concerns with your boss, she tells you to simply drop those features from the model. Does this solve the ethical issue? Why or why not?
+
+> <span style="color:red;font-weight:bold">TODO</span>: *It only partially solves the ethical issue. On one hand, removing indicators that pose ethical problems may preserve the privacy of any individuals present in the data set, and ensure that those indicators are not used against them. However, doing so runs the risk of creating a model that doesn't account for all of the factors that lead to a person losing their job. The model ultimately may not be useful or misleading. And if the model is intended to highlight discrepancies, removing indicators may not bring substantial discrepancies to light. Thus, before taking an indicator out, it would be important consider the context to inform the decision: i.e., considering the purpose of the model, how will it be used, what permissions individuals have granted regarding their data, and who will use the model.*
+
+*Additionally, just removing indicators may not fully solve the initial ethical problem. Some indicators in the dataset may be related to the removed indicator. For example, if income is removed, but a specific location based indicator (such as zip code, or census block) is still present, location may still be proxy for income anyways. This may not be an issue if indicators are fully independent of one another, but if there are any dependencies, those would need to be considered as well. If there is enough interaction between variables, the model as a whole may present an ethical problem, not just a few indicators. *
