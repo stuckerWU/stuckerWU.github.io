@@ -1,0 +1,112 @@
+---
+title: "Wines Features"
+author: "Summer Tucker"
+date: "2025-02-01"
+output: html_document
+---
+
+
+#Abstract:
+
+This is a technical blog post of **both** an HTML file *and* [.qmd file](/wine_features.qmd) hosted on GitHub pages.
+
+**Set Up Code:**
+```{r}
+library(tidyverse)
+library(caret)
+library(fastDummies)
+library(randomForest)
+wine <- readRDS(gzcon(url("https://github.com/cd-public/D505/raw/master/dat/wine.rds")))
+```
+
+**Explanation of set up code:**
+
+> <span style="color:red;font-weight:bold">TODO</span>: 
+*Line 1: Loads the tidyverse package
+Line 2: Loads the caret package
+Line 3: Loads the fastDummies package
+Line 4: Loads the randomForest package
+Line 5: Reads in the wine data from a url.
+*
+
+# Feature Engineering
+
+We begin by engineering an number of features.
+
+1. Create a total of 10 features (including points). 
+2. Remove all rows with a missing value. 
+3. Ensure only log(price) and engineering features are the only columns that remain in the `wino` dataframe.
+
+```{r}
+#Creating 10 features, dropping rows with a missing value, selecting only log(price) and the other 10 features
+
+wino <- wine %>%
+  mutate(region_1 = fct_lump(region_1, 5)) %>%    
+  mutate(variety = fct_lump(variety, 4)) %>%    
+  mutate(lprice = log(price)) %>%              
+  select(lprice, points, region_1, variety) %>%
+  drop_na(.)
+head(wino)
+
+
+renamer <- function(s) {
+  s %>% tolower() %>% str_replace("-| ", "_")
+}
+
+wino <- wino %>%
+  dummy_cols(remove_selected_columns = TRUE) %>%
+  rename_with(.fn = renamer) %>%
+  select(-ends_with("other"))
+head(wino)
+
+
+```
+
+# Caret
+
+We now use a train/test split to evaluate the features.
+
+1. Use the Caret library to partition the wino dataframe into an 80/20 split. 
+2. Run a linear regression with bootstrap resampling. 
+3. Report RMSE on the test partition of the data.
+
+```{r}
+# Partitioning wino dataframe
+
+wine_index <- createDataPartition(wino$lprice, p = 0.8, list = FALSE)
+wino_tr <- wino[wine_index, ]
+wino_te <- wino[-wine_index, ]
+
+```
+
+```{r}
+#Creating a linear regression model with bootstrap resamping (training partition)
+
+w_train_model <- train(lprice ~ .,
+  data = wino_tr,
+  method = "lm",
+  trControl = trainControl(method = "boot", number = 25)
+)
+
+# Finding RMSE of test partition
+
+postResample(
+  pred = predict(w_train_model, wino_te),
+  obs = wino_te$lprice
+)
+
+
+```
+
+> <span style="color:red;font-weight:bold">TODO</span>: 
+*The RMSE of the test partition is 0.4929897 (though this will vary each time resampling is repeated).
+*
+
+# Variable selection
+
+We now graph the importance of your 10 features.
+
+```{r}
+# TODO: 
+plot(varImp(w_train_model, scale = TRUE))
+```
