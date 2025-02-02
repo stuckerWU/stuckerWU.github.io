@@ -7,4 +7,5 @@ Quarto markdown available <a href= "https://stuckerWU.github.io/wine_of_pnw1-19.
 ## Data 505 Homework 2
 HTML version of the homework available <a href = "https://stuckerWU.github.io/wine_features.html">[here]</a>
 
-Quarto markdown available <a href= "https://stuckerWU.github.io/wine_features.qmd">[here]<
+Quarto markdown available <a href= "https://stuckerWU.github.io/wine_features.qmd">[here]</a>
+
