@@ -3,8 +3,12 @@ title: "Wines Features"
 author: "Summer Tucker"
 date: "2025-02-01"
 output: html_document
+
 ---
 
+format:
+  html:
+    embed-resources:true
 
 #Abstract:
 
