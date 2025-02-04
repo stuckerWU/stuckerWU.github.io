@@ -6,9 +6,7 @@ output: html_document
 
 ---
 
-format:
-  html:
-    embed-resources:true
+
 
 #Abstract:
 
