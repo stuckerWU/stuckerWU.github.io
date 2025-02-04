@@ -1,9 +1,11 @@
 ---
-title: "Wines Features"
+title: "Wines of the PNW"
 author: "Summer Tucker"
-date: "2025-02-01"
-output: html_document
+date: "02/03/2025"
 
+format: 
+  html:
+    embed-resources: true
 ---
 
 
