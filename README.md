@@ -9,3 +9,8 @@ HTML version of the homework available <a href = "https://stuckerWU.github.io/wi
 
 Quarto markdown available <a href= "https://stuckerWU.github.io/wine_features.qmd">[here]</a>
 
+
+## Data 505 Homework 3
+HTML version of the homework available <a href = "https://stuckerWU.github.io/knn.html">[here]</a>
+
+Quarto markdown available <a href= "https://stuckerWU.github.io/knn.qmd">[here]</a>
