@@ -1,0 +1,144 @@
+---
+title: $K$NN
+author: "Summer Tucker"
+date: "02/10/2025"
+
+format: 
+  html:  # You will quite likely want to change all but the last one, to taste
+    theme: superhero  
+    mainfont: monospace
+    highlight-style: github
+    title-block-banner: true
+    embed-resources: true
+
+---
+
+**Abstract:**
+
+This is a technical blog post of **both** an HTML file *and* [.qmd file](https://raw.githubusercontent.com/cd-public/D505/refs/heads/master/hws/src/knn.qmd) hosted on GitHub pages.
+
+# 1. Setup
+
+```{r}
+sh <- suppressPackageStartupMessages
+sh(library(tidyverse))
+sh(library(caret))
+sh(library(fastDummies))
+wine <- readRDS(gzcon(url("https://github.com/cd-public/D505/raw/master/dat/pinot.rds")))
+```
+
+## 2. $K$NN Concepts
+
+Explain how the choice of K affects the quality of your prediction when using a $K$ Nearest Neighbors algorithm.
+
+*The KNN looks at a target data point, and classifies based on traits of the other data points closest to the target point. For example, if you are attempting to predict whether a book belongs in genre A (romance) versus genre (B) horror, KNN looks at the genre of the other data points (books) closest to your target book to determine what genre the target book is. When using KNN, you need to specify the number of close data points (i.e., neighbors) to look at. If you look at too few neighbors, you run the risk of creating an overfitted model that only works well for your exact dataset. On the other hand, looking at too many neighbors can lead to a model that is of no help. For example, if there are roughly 20 books for the horror genre all clustered together, picking a K value of 100 won't be helpful, as that would start including many other, far away data points that are less and less likely to be the correct genre. Knowing this, to select a good K value, you may need to get familiar with your data: consider how many data points are in each group you're classifying into, see how close data points typically are, and investigate how often data points defy expected trends.*
+
+*Source: https://www.datacamp.com/tutorial/k-nearest-neighbors-knn-classification-with-r-tutorial*
+
+*Source: https://www.geeksforgeeks.org/k-nearest-neighbours/:*
+
+</span>
+
+## 3. Feature Engineering
+
+1. Remove the taster_name column from the data.
+2. Create a version of the year column that is a *factor* (instead of numeric).
+3. Create dummy variables that indicate the presence of "cherry", "chocolate" and "earth" in the description.
+  - Take care to handle upper and lower case characters.
+4. Create 3 new features that represent the interaction between time and the cherry, chocolate and earth inidicators.
+5. Remove the description column from the data.
+
+```{r}
+
+#Changing the year column from a numeric to a factor.Creating dummy variables for presence of cherry, chocolate, and earth in description.
+initial_wrangle <- wine %>%
+  mutate(year=as.factor(year)) %>%
+  mutate(description=tolower(description))%>%
+  mutate(note_cherry = str_detect(description,"cherry")) %>% 
+  mutate(note_chocolate = str_detect(description,"chocolate")) %>% 
+  mutate(note_earth = str_detect(description,"earth"))
+
+#Creating a vector of years 2003-2015, to ultimately create a feature that represents whether a wine was in specified year range, and had a cherry, chocolate, or earth note.
+years_to_include <- c("2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015")
+
+#Creating new features that show True or False if the year is 2003-2015 and specified note column is true. 
+second_wrangle <- initial_wrangle %>%
+    mutate(time_cherry=ifelse(year %in% years_to_include & note_cherry=="TRUE", "TRUE","FALSE"))%>%
+    mutate(time_chocolate=ifelse(year %in% years_to_include & note_chocolate=="TRUE", "TRUE","FALSE"))%>%
+    mutate(time_earth=ifelse(year %in% years_to_include & note_earth=="TRUE", "TRUE","FALSE"))
+
+#Removing the description column
+wine_wrangled <- second_wrangle %>% select(-description)
+
+```
+## 4. Preprocessing 
+
+1. Preprocess the dataframe from the previous code block using BoxCox, centering and scaling of the numeric features
+2. Create dummy variables for the `year` factor column
+
+```{r}
+# Use Caret to preprocess data frame, center and scale numeric features
+
+wine_caret_preprocess <- wine_wrangled %>%
+  preProcess(method = c("BoxCox","center","scale")) %>% 
+  predict(wine_wrangled)
+
+
+
+#Create dummy variables for the year column.
+wine_final <- wine_caret_preprocess %>%
+    dummy_columns(select_columns=c("year"))
+
+```
+
+
+## 5. Running $K$NN
+
+1. Split the dataframe into an 80/20 training and test set
+2. Use Caret to run a $K$NN model that uses your engineered features to predict province
+  - use 5-fold cross validated subsampling 
+  - allow Caret to try 15 different values for K
+3. Display the confusion matrix on the test data
+
+
+```{r}
+
+#Partitioning data into training and test set
+set.seed(505)
+wine_index <- createDataPartition(wine_final$province, p = 0.8, list = FALSE)
+train <- wine_final[ wine_index, ]
+test <- wine_final[-wine_index, ]
+
+#Using caret to run a KNN model
+
+knn_model <- train(province ~ .,
+             data = train, 
+             method = "knn",
+             tuneLength = 15,
+             trControl = trainControl(method="cv",number = 5))
+knn_model
+
+
+#Create confusion matrix based on test data
+confusionMatrix(predict(knn_model, test),factor(test$province))
+
+
+```
+
+## 6. Kappa
+
+How do we determine whether a Kappa value is represents a good or bad outcome?
+
+*There is a general rule of thumb about what consitutes a good or bad Kappa value, based on the range the value falls into. For example, a value of 0.41 - 0.6 is considered pretty good. A value over 0.8 is considered almost perfect. The model created in this homework has a value of 0.3597, which falls into the ok range. However, this is just a rule of thumb - determining whether the value really is good or bad will depend on the context (what your research question is, what the purpose of the model is, or even the accuracy in comparison to other methods). In this case, the accuracy for this model and Kappa value is about 61 %. That's better than flipping a coin, but not wildly better. To me, that doesn't seem like a good outcome. But if the context were different, maybe it would be. For example, what if instead I was trying to predict how well different types of industrial equipment produce a part that is within a small range of acceptable measurements, with the intent of reducing defective parts. In that case, even if the model isn't the best or most accurate model, that small edge may still be meaningful and important to me. This of course is just a made up example, but the overall point being that "good" or "bad" will depend on what you're trying to achieve.*
+
+*Additionally, on the other end of the spectrum, if the Kappa value is really good, it still may be necessary to figure out why. You may find upon further analysis what variables have a lot of influence in the model, or realize that there is a relationship between a variable and the predicted outcome that you haven't thought of previously. For example, if a book reviewer only reviews books of a certain genre, then the presence of that reviewer might be a very strong indicator of what genre the book will be. This brings up something interesting to consider - what if you didn't have information about the book reviewer? Would the model still work well? The answer to that question may provide you a better sense of whether the Kappa value is a good reflection of the model's accuracy, or if it's just reflecting one particularly strong variable. So, again, the Kappa value alone may not tell you whether there's a good or bad outcome - further analysis is needed to validate that conclusion.*
+
+## 7. Improvement
+
+How can we interpret the confusion matrix, and how can we improve in our predictions?
+
+*The confusion matrix provides interesting insight about how accurate the model was for each of the provinces in the model. By looking at how often the model's prediction is consistent with the test data, we can get a more nuanced understanding of what provinces the model predicts well (or not).*
+
+*For example, looking at Oregon, the matrix shows there were 253 instances where the model predicted the province would be Oregon, and the test partition of data also had 253 Oregon wines.However, there were also 253 instance where the model predicted California, and the wine was actually from California. So, the matrix brings up an interesting question: why did the model mix up Oregon and California so much? The answer to this may lie outside of the data. Though I am no wine expert, it's possible that wines from Southern Oregon and Northern California might be hard to distinguish due to similarities in geography and climate. *
+
+*We could improve our predictions in a variety of ways, depending on what we find in the confusion matrix. One option might be to omit variables from our model, and see how the Kappa value and accuracy changes. We could also change what variables we use (for example, maybe instead of using a feature about chocolate, maybe a feature about tannins might be more helpful). We can also look more closely into the underlying data, and see if there's simply a deficiency in the dataset (maybe there aren't enough wines of a certain type, or overrepresentation of certain wines). Finally, as alluded to above, we may need to look outside of the dataset to find how the model should be tweaked. Going back to the issue of the California and Oregon wines, an wine expert may be able to explain why these wines might be hard to distinguish, and whether other factors would be appropriate for differentiating them in a statistical model. In short, there are a variety of ways we could improve our prediction, but it will depend on what unique trends or quirks we find when we create and run a model. *
