@@ -1,0 +1,206 @@
+---
+title: Conditional Probability 
+author: "Summer Tucker"
+date: "02/16/2025"
+
+format: 
+  html:  # You will quite likely want to change all but the last one, to taste
+    page-layout: full
+    theme: superhero  
+    mainfont: monospace
+    highlight-style: github
+    title-block-banner: true
+    embed-resources: true
+
+---
+
+**Abstract:**
+
+This is a technical blog post of **both** an HTML file *and* [.qmd file](https://raw.githubusercontent.com/cd-public/D505/refs/heads/master/hws/src/knn.qmd) hosted on GitHub pages.
+
+
+# 1. Setup
+
+Step Up Code:
+```{r}
+sh <- suppressPackageStartupMessages
+sh(library(tidyverse))
+sh(library(caret))
+sh(library(dplyr))
+sh(library(fastDummies))
+sh(library(thematic))
+sh(library(naivebayes)) # New
+sh(library(tidytext)) # New
+sh(library(klaR))
+wine <- readRDS(gzcon(url("https://github.com/cd-public/D505/raw/master/dat/pinot.rds")))
+
+```
+
+
+# 2. Conditional Probability
+
+Calculate the probability that a Pinot comes from Burgundy given it has the word ‘fruit’ in the description.
+
+```{r}
+#Create a feature that indicates when fruit is in the description
+wine_prob <- wine %>% 
+  mutate(fruit = str_detect(description,"fruit")) %>% 
+  dplyr::select(-description, year)
+
+#Calculate the probability
+fruit_and_burgundy <- nrow(filter(wine_prob, province=="Burgundy" & fruit))/nrow(wine_prob)
+fruit <- nrow(filter(wine_prob, fruit))/nrow(wine_prob)
+fruit_and_burgundy/fruit
+```
+
+#### *The probability that pinot comes from Burgundy is about 22%.*
+
+
+# 3. Naive Bayes Algorithm
+
+We train a naive bayes algorithm to classify a wine’s province using: 1. An 80-20 train-test split. 2. Three features engineered from the description 3. 5-fold cross validation.
+
+We report Kappa after using the model to predict provinces in the holdout sample.
+
+```{r}
+#Creating three features 
+wine_wrangle <- wine %>%
+  mutate(year=as.factor(year)) %>%
+  mutate(description=tolower(description))%>%
+  mutate(note_cherry = str_detect(description,"cherry")) %>% 
+  mutate(note_aroma = str_detect(description,"aroma")) %>% 
+  mutate(note_acid = str_detect(description,"acid")) %>%
+  dplyr::select(-description)
+
+
+#Partitioning the data
+set.seed(505)
+wine_index <- createDataPartition(wine_wrangle$province, p = 0.80, list = FALSE)
+train <- wine_wrangle[ wine_index, ]
+test <- wine_wrangle[-wine_index, ]
+
+#Create the Naive bayes algorithm with 5 fold cross validation
+nb_model <- train(province ~ .,
+             data = train, 
+             method = "naive_bayes",
+             metric = "Kappa",
+             trControl = trainControl(method = "cv", number=5))
+
+confusionMatrix(predict(nb_model, test),factor(test$province))
+```
+
+#### *The Kappa value is 0.1239*
+
+
+
+# 4. Frequency Differences
+
+We find the three words that most distinguish New York Pinots from all other Pinots.
+
+```{r}
+#Finding frequency of words for NY pinots only
+
+wine_words  <- readRDS(gzcon(url("https://github.com/cd-public/D505/raw/master/dat/pinot.rds")))
+
+df_NY_initial <- wine_words %>% filter(province=="New_York") 
+
+df_NY <- df_NY_initial %>%
+  unnest_tokens(word, description) %>% arrange(word)
+
+df_NY <- df_NY %>%
+  anti_join(stop_words)
+
+df_NY <- df_NY %>%
+  filter(word != "wine") %>%
+  filter(word != "pinot")
+
+df_NY <- df_NY %>%
+ count(id, word)%>%
+  group_by(id)%>%
+  mutate(freq = n/sum(n))
+
+df_NY <- df_NY %>% 
+  mutate(exists = (n>0))
+
+df_NY <- df_NY %>% 
+  ungroup()
+
+df_NY <- df_NY %>% 
+  group_by(word)
+
+df_NY <- df_NY %>%
+  mutate(total = sum(n))
+
+df_NY <- df_NY %>% 
+  left_join(dplyr::select(df_NY_initial,id, province), by = "id")
+
+  df_NY <- df_NY %>% 
+    dplyr::select(-province) %>%
+    count(word) %>%
+    arrange(word, dplyr::desc(n))
+
+
+df_NY <- df_NY %>% ungroup() %>% mutate(total=sum(n), percent_freq_NY=(n/total)*100)%>% arrange(dplyr::desc(percent_freq_NY))
+
+
+```
+
+
+```{r}
+
+#Finding frequency of words for non pinots only
+
+df_other_initial <- wine_words %>% filter(province!="New_York")
+
+
+df_other <- df_other_initial %>%
+  unnest_tokens(word, description) 
+
+df_other <- df_other %>%
+  anti_join(stop_words)
+
+df_other <- df_other %>%
+  filter(word != "wine") %>%
+  filter(word != "pinot") 
+
+df_other <- df_other %>%
+ count(id, word)%>%
+  group_by(id)%>%
+  mutate(freq = n/sum(n))
+
+df_other <- df_other %>% 
+  mutate(exists = (n>0))
+
+df_other <- df_other %>% 
+  ungroup()
+
+df_other <- df_other %>% 
+  group_by(word)
+
+df_other <- df_other %>%
+  mutate(total = sum(n))
+
+df_other <- df_other %>% 
+  left_join(dplyr::select(df_other_initial,id, province), by = "id")
+
+  df_other <- df_other %>% 
+    dplyr::select(-province) %>%
+    count(word) %>%
+    arrange(word, dplyr::desc(n))
+
+
+df_other <- df_other %>% ungroup() %>% mutate(total=sum(n), percent_freq_other=(n/total)*100)%>% arrange(dplyr::desc(percent_freq_other))
+
+```
+
+
+```{r}
+comparison <- df_NY %>% left_join(df_other, by="word")%>% arrange(dplyr::desc(percent_freq_NY))%>%
+  mutate(difference_freq = percent_freq_NY - percent_freq_other)%>%
+  arrange(dplyr::desc(difference_freq))
+
+comparison %>% print(n = 10, width = Inf)
+```
+
+#### *It appears that compared to the rest of the provinces, noir, cherry, and tannins are the words that most distinguish NY pinots from other pinots.*
+
