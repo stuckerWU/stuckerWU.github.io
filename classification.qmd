@@ -1,0 +1,149 @@
+---
+title: "Classification"
+author: "Summer Tucker"
+date: "02/24/2025"
+
+format: 
+  html:
+    page-layout: full
+    theme: superhero  
+    mainfont: monospace
+    highlight-style: github
+    title-block-banner: true
+    embed-resources: true
+
+---
+
+# **Abstract:**
+
+This is a technical blog post of **both** an HTML file *and* [.qmd file](https://raw.githubusercontent.com/cd-public/D505/refs/heads/master/hws/src/classify.qmd) hosted on GitHub pages.
+
+# 1. Setup
+
+**Step Up Code:**
+
+```{r}
+sh <- suppressPackageStartupMessages
+sh(library(tidyverse))
+sh(library(caret))
+sh(library(naivebayes))
+sh(library(tidytext))
+sh(library(pROC))
+sh(library(SnowballC))
+wine <- readRDS(gzcon(url("https://github.com/cd-public/D505/raw/master/dat/pinot.rds")))
+```
+
+# 2. Logistic Concepts
+
+
+### Why do we call it Logistic Regression even though we are using the technique for classification?
+
+###### *With a logistic regressoin model, we are calculating how a change in X determines whether Y will land in group A versus group B. This is different than the typical linear regression model where you're calculating how a change in X influences the value of Y, and there are many different values of Y. However, with a logistic regrssion model, we are still iteratively calculating how close the data points are to a specific line (in this case an sort of S shaped curve) and determining how accurately that curve fits the data. So even though the formula is different in that it reports a different type of outcome (a binary outcome versus a continuous range of possible oucomes), the underlying approach of comparing the distance of each point to a line is still occuring.*
+
+# 3. Modeling
+
+### We train a logistic regression algorithm to classify a whether a wine comes from Marlborough using:
+
+### 1. An 80-20 train-test split.
+### 2. Three features engineered from the description
+### 3. 5-fold cross validation.
+
+### We report Kappa after using the model to predict provinces in the holdout sample.
+
+```{r}
+
+#Create a function that removes stop words, and any additional words we'd like to omit
+desc_to_words <- function(df, omits) { 
+  df %>%
+    unnest_tokens(word, description) %>%
+    anti_join(stop_words) %>% # get rid of stop words
+    filter(!(word %in% omits))
+}
+
+#Create a function that transforms the individual words into word stems
+words_to_stems <- function(df) { 
+  df %>%
+    dplyr::mutate(word = wordStem(word))
+}
+
+#Create a function that counts the number of times a word appears, and allows for filtering based on the number of times the word appears
+filter_by_count <- function(df, j) { 
+  df %>%
+    count(id, word) %>% 
+    group_by(id) %>% mutate(exists = (n>0)) %>% ungroup %>% 
+    group_by(word) %>% 
+   dplyr:: mutate(total = sum(n)) %>% 
+    filter(total > j)
+}
+
+#Create a function that turns individual words into columns, removes NAs, and removes id column
+pivoter <- function(words, df) {
+  words %>%
+    pivot_wider(id_cols = id, names_from = word, values_from = exists, values_fill = list(exists=0)) %>% 
+    right_join(select(df,id,province)) %>% 
+    drop_na() %>% 
+    select(-id)
+}
+
+#Create another function that combines the above functions into one
+wine_words <- function(df, j, stem) { 
+
+  words <- desc_to_words(df, c("wine","pinot","vineyard","drink"))
+  
+  if (stem) {
+    words <- words_to_stems(words)
+  }
+  
+  words <- filter_by_count(words, j)
+
+  pivoter(words, df)
+}
+```
+
+```{r}
+#Apply wine_words to wine dataset and pare down the columns enough so there are only 3 features left
+
+wineM <- wine_words(wine, 1500, T) %>% 
+          dplyr::mutate(marlborough = as.factor(province == "Marlborough")) %>%
+          dplyr::select(-province,-raspberri,-spice,-flavor,-fruit,-ripe,-tannin,-palat,-acid,-black,-light,-red)
+
+#Partion the data into an 80/20 split
+wine_index <- createDataPartition(wineM$marlborough, p = 0.80, list = FALSE)
+train <- wineM[wine_index, ]
+test <- wineM[-wine_index, ]
+
+#Run a logistic regression algorithm, using 5 fold cross validation.
+
+fit <- train(marlborough~ .,
+             data = train, 
+             method = "glm",
+             family = "binomial",
+             trControl = trainControl(method = "cv", number=5))
+
+fit
+
+```
+
+##### *The Kappa value is zero.*
+
+
+# 4. Binary vs Other Classification
+
+### What is the difference between determining some form of classification through logistic regression versus methods like $K$-NN and Naive Bayes which performed classifications?
+
+##### *Logistic regression is a method for classifying data points into one of two possible groups. For example, you could use logistic regression to predict whether a wine is red or not red, or whether Reviewer A rates a wine as excellent, or not excellent. Logistic regression accomplishes this by calculating the probability of an event, but is only predicting the probability of an event with a binary outcome. In comparision, KNN and Naive Bayes take different approaches to classification. KNN looks at a target data point, finds a specific number of it's nearest neighboring data points, and classifies the target point based on whichever group makes up a majority of the neighboring points. Similar to logistic regression, Naive Bayes also uses probability calculations to make a prediction. But, with Naive Bayes you're calculating the probability that a specific outcome occurs, based on value of the independent variable(s). For example, you could use Naive Bayes to find the probability a wine is from California, given that a wine has a cherry flavor. You could use all of these options to predict whether a data point falls into a specific class, but the method for doing so is different in each.*
+
+*Source: https://www.geeksforgeeks.org/naive-bayes-vs-logistic-regression-in-machine-learning/*
+
+# 5. ROC Curves
+
+### We can display an ROC for the model to explain your model's quality.
+
+```{r}
+prob <- predict(fit, newdata = test, type = "prob")[,2]
+myRoc <- roc(test$marlborough, prob)
+plot(myRoc)
+auc(myRoc)
+```
+
+##### *A ROC measures the model's sensitivity (how well model performed in finding true positives) and specificity (how well the model avoided reporting false positives). With the ROC, a point near (0,1) on the ROC curve represents high sensitivity and high specificity (ideal performance). In contrast, a point near the diagonal line means the model isn't much better (or is even worse than) than random guessing. In this case, the model's curve seems to fall somewhere in the middle. It's nowhere close to (0,1) but isn't right up against the diagonal line. Thus, it doesn't appear that it's as bad as random chance. With a ROC, the measurement for the area under the curve (AUC) also provides some insight to performance. Higher values (close to 1) indicate good performance, while 0.5 is the same as random guessing. In this case, the AUC is about 0.6. Again, this indicates the model is a little better than random guessing, but that there is clearly a lot of room for improvement. Additionally, given the extremely low kappa value on the model, and knowing that some of the features in the model are very generic, it's worthwhile considering that another metric is indicating the model isn't performing well. I would personally go back to the drawing board to reconsider my features and see how that would improve the model's performance.*
