@@ -19,3 +19,8 @@ Quarto markdown available <a href= "https://stuckerWU.github.io/knn.qmd">[here]<
 HTML version of the homework available <a href = "https://stuckerWU.github.io/conditionalprobability.html">[here]</a>
 
 Quarto markdown available <a href= "https://stuckerWU.github.io/conditionalprobability.qmd">[here]</a>
+
+## Data 505 Homework 5
+HTML version of the homework available <a href = "https://stuckerWU.github.io/classification.html">[here]</a>
+
+Quarto markdown available <a href= "https://stuckerWU.github.io/classification.qmd">[here]</a>
