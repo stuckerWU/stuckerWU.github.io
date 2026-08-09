@@ -1,6 +1,5 @@
 ---
-title: Emergency Shelter & Housing Outcomes - Factors for success"
-subtitle: Summer Tucker · Mike Kimmell · Jon Garrow"
+subtitle: "Summer Tucker · Mike Kimmell · Jon Garrow"
 image: images/profile.png
 about:
   template: trestles
@@ -9,7 +8,6 @@ about:
 
 
 ---
-
-
+Emergency Shelter & Housing Outcomes - Factors for success
 ---
 
