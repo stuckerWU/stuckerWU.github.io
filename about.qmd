@@ -1,5 +1,5 @@
 ---
-title: "Summer Tucker · Mike Kimmell · Jon Garrow"
+title: "The Project Team"
 image: images/profile.png
 about:
   template: solana
@@ -7,8 +7,8 @@ about:
   image-width: 12em
 ---
 
-## Thing 1
+## Summer Tucker
 
-### Thing 1.1
+## Mike Kimmell
 
-### Thing 1.2
+## Jon Garrow
