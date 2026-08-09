@@ -1,6 +1,6 @@
 ---
-title: CAPSTONE UNDER CONSTRUCTION"
-subtitle: CAPSTONE UNDER CONSTRUCTION"
+title: Emergency Shelter & Housing Outcomes - Factors for success"
+subtitle: Summer Tucker · Mike Kimmell · Jon Garrow"
 image: images/profile.png
 about:
   template: trestles

@@ -1,5 +1,5 @@
 ---
-title: "Capstone under constuction"
+title: "Summer Tucker · Mike Kimmell · Jon Garrow"
 image: images/profile.png
 about:
   template: solana

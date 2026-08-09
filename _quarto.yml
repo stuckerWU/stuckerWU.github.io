@@ -9,9 +9,9 @@ execute:
   freeze: auto
 
 website:
-  title: "Blitz Bearcat"
-  description: "M.S. Data Science portfolio — Willamette University"
-  site-url: https://your_github_username.github.io
+  title: "DATA 510 - Willamette MSDS Capstone"
+  description: "Emergency Shelter & Housing Outcomes - Factors for success"
+  site-url: https://stuckerWU.github.io
   navbar:
     right:
       - href: index.qmd
@@ -25,13 +25,10 @@ website:
       - href: about.qmd
         text: About
       - icon: github
-        href: https://github.com/your_github_username
+        href: https://github.com/stuckerWU
         aria-label: GitHub
-      - icon: linkedin
-        href: https://linkedin.com/in/your_github_username
-        aria-label: LinkedIn
   page-footer:
-    left: "© 2026 Blitz Bearcat"
+    left: "© 2026 Summer Tucker · Mike Kimmell · Jon Garrow"
 
 format:
   html:

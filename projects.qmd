@@ -1,6 +1,6 @@
 ---
-title: "CAPSTONE UNDER CONSTRUCTION"
-subtitle: "CAPSTONE UNDER CONSTRUCTION"
+title: "Emergency Shelter & Housing Outcomes - Factors for success"
+subtitle: "Summer Tucker · Mike Kimmell · Jon Garrow"
 listing:
   contents: projects
   type: grid
@@ -11,4 +11,4 @@ listing:
   fields: [image, date, title, description, categories]
 ---
 
-CAPSTONE UNDER CONSTRUCTION
+CAPSTONE UNDER CONSTRUCTION (where is this info?)

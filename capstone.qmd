@@ -1,5 +1,5 @@
 ---
-title: "Capstone: [Your Capstone Title]"
+title: "Capstone: Emergency Shelter & Housing Outcomes - Factors for success"
 subtitle: "A one-sentence hook: what you built and who it helps."
 date: 2026-07-27
 image: projects/capstone/featured.svg
