@@ -14,10 +14,13 @@ about:
 # Emergency Shelter & Housing Outcomes - Factors for success
 
 ## Intro
+
 Church at the Park’s (C\@P) program data, including shelter and housing applications, demographics, assessments, and case notes live in 3 disconnected systems. In this project, we explored how the data can be joined together to provide insights on program delivery, average times post-application and in stays, and what is predictive of positive exits. 
 Through this work we hope to help Church at the Park’s staff better understand their program outcomes and advocate for increased resources that will lead to more community benefit.
 
 ## Contents
+
 On this site, you will find our team's project poster and final write-up (available 8/17/26). Request for access to our GitHub repo should be directed to one of our project team members, located on our 'About' page.
+
 ---
 

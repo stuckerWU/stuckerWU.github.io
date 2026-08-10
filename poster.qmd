@@ -4,9 +4,8 @@ toc: true
 ---
 
 ## Poster?
-![](images/Final_poster.pdf){fig-alt="Capstone Poster" width="90%"}
-## Other thing1
-## Other thing2
+![](images/Final_poster.pdf){fig-alt="Capstone Poster"}
+
 
 
 
