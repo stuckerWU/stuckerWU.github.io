@@ -3,9 +3,19 @@ title: "Emergency Shelter & Housing Outcomes - Factors for success"
 toc: true
 ---
 
-## Poster?
-![](images/Final_poster.pdf){fig-alt="Capstone Poster"}
+## Capstone Poster
 
+[Download the Poster (PDF)](images/Final_poster.pdf){.btn .btn-primary}
 
+<iframe 
+    src="images/Final_poster.pdf" 
+    width="100%" 
+    height="800px"
+    style="border: 1px solid #ddd;">
+</iframe>
 
-
+<object data="images/Final_poster.pdf" type="application/pdf" width="100%" height="600px">
+  <p>If your browser does not support inline PDFs, 
+     <a href="images/Final_poster.pdf">Click here to download the PDF instead.</a>
+  </p>
+</object>
