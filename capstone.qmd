@@ -1,9 +1,7 @@
 ---
-title: "Capstone: Emergency Shelter & Housing Outcomes - Factors for success"
+title: "Capstone Write-Up"
 subtitle: "A one-sentence hook: what you built and who it helps."
-date: 2026-07-27
-image: projects/capstone/featured.svg
-categories: [capstone, machine-learning, R]
+date: 2026-08-17
 toc: true
 ---
 
@@ -12,73 +10,47 @@ This is the anchor of your portfolio. A hiring manager who reads only one page
 should read this one. Replace every bracketed placeholder, then delete this note.
 :::
 
-## The one-liner
+## Intro
 
-> We integrated **\[data sources\]** into **\[dataset\]** so that
-> **\[stakeholder\]** can **\[decision they can now make\]**.
+> We integrated three different C\@P data sources, and investigated factors associated with the wait time to enter shelter, and how long it takes to exit shelter. 
 
-**Role:** \[e.g. I led the data pipeline and validation.\]
-**Team:** \[solo, or name + link teammates.\]
-**Repo:** [github.com/your_github_username/your-capstone-repo](https://github.com/your_github_username/your-capstone-repo)
+## The Question
 
-## The question
+Church at the Park (C\@P) provides vital services to the local community, and generates data in multiple locations to provide those services, but does not have these data sources integrated. This lack of integration makes it difficult for C\@P to analyze their data gain insight into what factors drive positive outcomes. Through this work we hoped to help C\@P’s staff better understand their program outcomes and advocate for increased resources that will lead to more community benefit.
 
-What problem were you solving, and why does it matter to a real stakeholder?
-Two or three sentences. No jargon a hiring manager would have to look up.
+## The Data
 
-## The data
+Our data came from three sources, all provided by C\@P, for activity 2024-2025. As summary of our data sources is included below.
 
-Where the data came from, how much of it, and the one hard thing about it
-(missingness, joins across sources, scale, privacy). This is your data
-engineering story — the part the repo link backs up.
++----------------------------------------------------------------------------+-------------+-----------+------------------------------------------------------------+
+| Source                                                                     | Volume      | Coverage  | Access
++:===========================================================================+:============+:==========+:===========================================================+
+| Application data (From Cognito)                                            | 6604 rows   | 2024-2025 | Provided by C\@P, a one time manual pull completed by C\@P |
++----------------------------------------------------------------------------+-------------+-----------+------------------------------------------------------------+
+| Case management data (From Activate Care)                                  | 20,930 rows | 2024-2025 | Provided by C\@P, a one time manual pull completed by C\@P |
++----------------------------------------------------------------------------+-------------+-----------+------------------------------------------------------------+
+| Federal reporting data (From Homeless Information Management System, HMIS) | 1,347 rows  | 2024-2025 | Provided by C\@P, a one time manual pull completed by C\@P |
++----------------------------------------------------------------------------+-------------+-----------+------------------------------------------------------------+
 
-## The approach
+**Engineering summary**
 
-Your method at portfolio depth: shorter than your M4 write-up, longer than a
-tweet. What did you try, what did you keep, and why.
+Due to the confidentiality of the data and technical limitations in setting up access to it, our data pipeline required manual extraction and transformation. Our pipeline consisted of three major steps: (1) Manually extract data from C\@P's three systems (C\@P staff assisted with obtaining these extracts), (2) Manually cleaning, wrangling, and redacting confidential information in C\@P's SharePoint, and (3) Exporting cleaned data to our Github repository. We then used Python and R scripts to analyze the data in Github and produce our deliverables.
+
+## Primary Methods
+
+**Duration analysis**
+
+Survival analysis is a statistical method that specifically examines how long it takes for an event to occur, and helps scientists develop estimates for when an event will occur. Often, survival analysis is used in medical or industrial research. For our purposes, we are using this method to examine how long participants take to enter and exit shelter, and explore which variables modify the time it takes to enter or exit. In this write up, going forward, we will refer to survival analysis as a duration analysis, as we felt duration is more descriptive of the analysis we were doing, and more appropriate considering the focus of our project.
+
+**Machine Learning (XGBoost)**
+
+Machine learning algorithms help uncover patterns in data, and can be used to develop models to predict specific results (for example, whether a customer will churn, or how long they will take to churn.) We opted to use machine learning to predict the status of a participant’s application (successful, returned, or unsuccessful), and what kind of outcome a participant exited to, once they left shelter. We specifically chose to use the XGBoost library, which uses multiple decision trees as the basis of its machine learning model. We used this method because it supports missing values without the need for imputation. We often found missingness throughout our data, so XGBoost was a good fit, especially given that the missingness may simply be because the participant was not required to answer every question in full.
 
 ## Findings
 
-Lead with your best figure or your architecture diagram.
+With our duration analysis and machine learning model, we identified a variety of variables that are associated with the time to enter or exit shelter. These variables tended to fall into two groups: specific circumstances or traits of a participant, and engagement with case management. However, based on our our exploration of the data and our discussions with C\@P, we also found that real world circumstances that are not captured in C\@P’s data may also affect the results and interpretation.
 
-![Replace with your key result or system diagram.](projects/capstone/featured.svg){fig-alt="Placeholder capstone figure" width="90%"}
+## The Full Write-Up
 
-State the finding in plain language, then the caveat. Sparse and true beats
-full and shaky.
+[Download the write-up (PDF)](assets/writeup.pdf){.btn .btn-primary}
 
-## The full write-up
-
-Pick the option that matches where your write-up lives, keep one, delete the rest.
-
-::: {.panel-tabset}
-
-### A · Native Quarto
-
-If your write-up is a `.qmd`, copy it into `projects/capstone/index.qmd` and
-link it, or fold its sections directly into this page. Set `eval: false` (or
-rely on `freeze`) on any chunk that needs data the public repo does not contain.
-
-### B · Embedded PDF
-
-```markdown
-[Download the write-up (PDF)](projects/capstone/writeup.pdf){.btn .btn-primary}
-
-<iframe src="projects/capstone/writeup.pdf" width="100%" height="800px"
-  style="border: 1px solid #ddd;"></iframe>
-```
-
-### C · Published Google Doc
-
-```markdown
-[Read the full write-up](https://docs.google.com/document/d/e/XXXX/pub){.btn .btn-primary}
-
-<iframe src="https://docs.google.com/document/d/e/XXXX/pub?embedded=true"
-  width="100%" height="800px" style="border: 1px solid #ddd;"></iframe>
-```
-
-:::
-
-## Dig deeper
-
-- 📦 **Code & pipeline:** [your-capstone-repo](https://github.com/your_github_username/your-capstone-repo)
-- 📊 **Slides / poster:** \[link if you have one\]

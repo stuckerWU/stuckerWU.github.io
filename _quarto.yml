@@ -19,7 +19,7 @@ website:
       - href: poster.qmd
         text: Poster      
       - href: capstone.qmd
-        text: Capstone      
+        text: Write-Up     
       - href: about.qmd
         text: About
       - icon: github

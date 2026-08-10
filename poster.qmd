@@ -1,9 +1,7 @@
 ---
-title: "Emergency Shelter & Housing Outcomes - Factors for success"
+title: "Capstone Poster"
 toc: true
 ---
-
-## Capstone Poster
 
 [Download the Poster (PDF)](images/Final_poster.pdf){.btn .btn-primary}
 
