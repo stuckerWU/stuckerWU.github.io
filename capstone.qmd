@@ -1,18 +1,9 @@
 ---
 title: "Capstone Write-Up"
-subtitle: "A one-sentence hook: what you built and who it helps."
+subtitle: "We integrated three different C\@P data sources, and investigated factors associated with the wait time to enter shelter, and how long it takes to exit shelter."
 date: 2026-08-17
 toc: true
 ---
-
-::: {.callout-note appearance="simple"}
-This is the anchor of your portfolio. A hiring manager who reads only one page
-should read this one. Replace every bracketed placeholder, then delete this note.
-:::
-
-## Intro
-
-> We integrated three different C\@P data sources, and investigated factors associated with the wait time to enter shelter, and how long it takes to exit shelter. 
 
 ## The Question
 
