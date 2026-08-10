@@ -7,8 +7,15 @@ about:
   image-width: 12em
 ---
 
-## Summer Tucker
-
-## Mike Kimmell
-
-## Jon Garrow
+# Summer Tucker
+## Links
+[Website](https://thedatatraveler.github.io/)
+[GitHub](https://github.com/stuckerWU)
+[LinkedIn](https://www.linkedin.com/in/summer-tucker-4250865b/)
+# Mike Kimmell
+[GitHub](https://github.com/mikekimmell/)
+[LinkedIn](https://www.linkedin.com/in/michael-kimmell-21981687/)
+# Jon Garrow
+[Website](https://jongarrow.com/)
+[GitHub](https://github.com/jwg973/)
+[LinkedIn](https://www.linkedin.com/in/jongarrow/)

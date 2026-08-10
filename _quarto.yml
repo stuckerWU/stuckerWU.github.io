@@ -16,10 +16,10 @@ website:
     right:
       - href: index.qmd
         text: Home
-      - href: capstone.qmd
-        text: Capstone
       - href: poster.qmd
-        text: Poster
+        text: Poster      
+      - href: capstone.qmd
+        text: Capstone      
       - href: about.qmd
         text: About
       - icon: github
