@@ -42,5 +42,6 @@ With our duration analysis and machine learning model, we identified a variety o
 
 ## The Full Write-Up
 
+Full Write-Up will be available on 8-17-2026
 [Download the write-up (PDF)](assets/writeup.pdf){.btn .btn-primary}
 
