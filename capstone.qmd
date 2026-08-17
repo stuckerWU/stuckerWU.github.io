@@ -32,7 +32,7 @@ Our data came from three sources, all provided by C\@P, for activity 2024-2025. 
 
   Due to the confidentiality of the data and technical limitations in setting up access to it, our data pipeline required manual extraction and transformation. Our pipeline consisted of three major steps: (1) Manually extract data from C\@P's three systems (C\@P staff assisted with obtaining these extracts), (2) Manually cleaning, wrangling, and redacting confidential information in C\@P's SharePoint, and (3) Exporting cleaned data to our GitHub repository. We then used Python and R scripts to analyze the data in GitHub and produce our deliverables.
 
-  ![](../images/diagram.png)
+  ![](images/diagram.png)
 
   One major limitation we discovered during step 2 of this process was the limited availability of matchable data points between the Applications data and the HMIS data. As such, we were only able to match a fraction of the total HMIS stays to their corresponding application. Additionally, this manually process was exacerbated by not having more powerful analysis tools to automatically find and evaluate potential duplicates en masse. This work could be greatly sped up by introducing some back-filling of the HMIS Record IDs to the applications data once an applicant has been approved for and moved into emergency shelter.
 
