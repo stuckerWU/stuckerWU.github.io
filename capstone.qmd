@@ -4,11 +4,17 @@ subtitle: "We integrated three different Church at the Park data sources, and in
 date: 2026-08-17
 ---
 
-## The Question
+## Abstract
 
-Church at the Park (C\@P) provides vital services to the local community, and generates data in multiple locations to provide those services, but does not have these data sources integrated. This lack of integration makes it difficult for C\@P to analyze their data gain insight into what factors drive positive outcomes. Through this work we hoped to help C\@P’s staff better understand their program outcomes and advocate for increased resources that will lead to more community benefit.
+  Problem: Church at the Park (C\@P) provides vital services to the local community, and generates data from multiple locations to provide those services, but does not have their data sources integrated. This lack of integration makes it difficult for C\@P to analyze their data to gain insight into what factors drive positive outcomes. Through this work we hoped to help C\@P's staff better understand their program outcomes and advocate for increased resources that will lead to more community benefit.
 
-## The Data
+  We integrated three different C\@P data sources, and investigated factors associated with the wait time to enter shelter, and how long it takes to exit shelter. To accomplish this, we used statistical analysis methods that examine duration of time until certain events occur, and built a machine learning model aimed at predicting outcomes of applications and exits to shelter.
+
+  With our duration analysis and machine learning models, we identified a variety of variables that are associated with the time to enter or exit shelter. These variables tended to fall into two groups: specific circumstances or traits of a participant, and engagement with case management.
+
+  Based on our exploration of the data and our discussions with C\@P, we also found that real world circumstances that are not captured in C\@P's data may also affect the results and interpretation. Of particular note, we found that the volume of applications for shelter significantly outpaces the availability of shelter. Only 14% of applications could ultimately be matched to a stay with C\@P, showing that there is a significant need for shelter in the Salem area community. Additionally, we identified a variety of opportunities where C\@P may want to invest resources to improve outcomes or adjust processes to improve data collection for future analysis.
+
+## Data Sources
 
 Our data came from three sources, all provided by C\@P, for activity 2024-2025. As summary of our data sources is included below.
 
@@ -24,17 +30,22 @@ Our data came from three sources, all provided by C\@P, for activity 2024-2025. 
 
 **Engineering summary**
 
-Due to the confidentiality of the data and technical limitations in setting up access to it, our data pipeline required manual extraction and transformation. Our pipeline consisted of three major steps: (1) Manually extract data from C\@P's three systems (C\@P staff assisted with obtaining these extracts), (2) Manually cleaning, wrangling, and redacting confidential information in C\@P's SharePoint, and (3) Exporting cleaned data to our Github repository. We then used Python and R scripts to analyze the data in Github and produce our deliverables.
+  Due to the confidentiality of the data and technical limitations in setting up access to it, our data pipeline required manual extraction and transformation. Our pipeline consisted of three major steps: (1) Manually extract data from C\@P's three systems (C\@P staff assisted with obtaining these extracts), (2) Manually cleaning, wrangling, and redacting confidential information in C\@P's SharePoint, and (3) Exporting cleaned data to our GitHub repository. We then used Python and R scripts to analyze the data in GitHub and produce our deliverables.
+
+  ![](../images/diagram.png)
+
+  One major limitation we discovered during step 2 of this process was the limited availability of matchable data points between the Applications data and the HMIS data. As such, we were only able to match a fraction of the total HMIS stays to their corresponding application. Additionally, this manually process was exacerbated by not having more powerful analysis tools to automatically find and evaluate potential duplicates en masse. This work could be greatly sped up by introducing some back-filling of the HMIS Record IDs to the applications data once an applicant has been approved for and moved into emergency shelter.
 
 ## Primary Methods
 
-**Duration analysis**
+**Duration Analysis**
 
-Survival analysis is a statistical method that specifically examines how long it takes for an event to occur, and helps scientists develop estimates for when an event will occur. Often, survival analysis is used in medical or industrial research. For our purposes, we are using this method to examine how long participants take to enter and exit shelter, and explore which variables modify the time it takes to enter or exit. In this write up, going forward, we will refer to survival analysis as a duration analysis, as we felt duration is more descriptive of the analysis we were doing, and more appropriate considering the focus of our project.
+  Survival analysis is a statistical method that specifically examines how long it takes for an event to occur and helps scientists develop estimates for when an event will occur. Often, survival analysis is used in medical or industrial research. For our purposes, we are using this method to examine how long participants take to enter and exit shelter, and explore which variables modify the time it takes to enter or exit. In this write up, going forward, we will refer to survival analysis as a duration analysis, as we felt duration is more descriptive of the analysis we were doing, and more appropriate considering the focus of our project.
 
 **Machine Learning (XGBoost)**
 
-Machine learning algorithms help uncover patterns in data, and can be used to develop models to predict specific results (for example, whether a customer will churn, or how long they will take to churn.) We opted to use machine learning to predict the status of a participant’s application (successful, returned, or unsuccessful), and what kind of outcome a participant exited to, once they left shelter. We specifically chose to use the XGBoost library, which uses multiple decision trees as the basis of its machine learning model. We used this method because it supports missing values without the need for imputation. We often found missingness throughout our data, so XGBoost was a good fit, especially given that the missingness may simply be because the participant was not required to answer every question in full.
+  Machine learning algorithms help uncover patterns in data and can be used to develop models to predict specific results (for example, whether a customer will churn, or how long they will take to churn.) We opted to use machine learning to predict the status of a participant's application (successful, returned, or unsuccessful), and what kind of outcome a participant exited to, once they left shelter. We specifically chose to use the XGBoost library, which uses multiple decision trees as the basis of its machine learning model. We used this method because it supports missing values without the need for imputation. We often found missingness throughout our data, so XGBoost was a good fit, especially given that the missingness may simply be because the participant was not required to answer every question in full.
+
 
 ## Findings
 
@@ -42,6 +53,5 @@ With our duration analysis and machine learning model, we identified a variety o
 
 ## The Full Write-Up
 
-Full Write-Up will be available on 8-17-2026
 [Download the write-up (PDF)](assets/writeup.pdf){.btn .btn-primary}
 
