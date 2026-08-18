@@ -23,6 +23,7 @@ Through this work we hope to help Church at the Park’s staff better understand
 On this site, you will find our team's project poster and final write-up (available 8/17/26). 
 
 ## Reproducibility
+
 The data for this project was provided by C@P with their permission. If you are interested in reproducing this project, a request for access to our GitHub repo should be directed to one of our project team members, located on our 'About' page. Please note that interested parties would also need to work with C@P to obtain and access data used for this project.
 ---
 
