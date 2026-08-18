@@ -25,7 +25,7 @@ Our data came from three sources, all provided by C\@P, for activity 2024-2025. 
 +----------------------------------------------------------------------------+-------------+-----------+------------------------------------------------------------+
 | Case management data (From Activate Care)                                  | 20,930 rows | 2024-2025 | Provided by C\@P, a one time manual pull completed by C\@P |
 +----------------------------------------------------------------------------+-------------+-----------+------------------------------------------------------------+
-| Federal reporting data (From WellSky, HMIS) | 1,347 rows  | 2024-2025 | Provided by C\@P, a one time manual pull completed by C\@P |
+| Federal reporting data (From WellSky, HMIS)                                | 1,347 rows  | 2024-2025 | Provided by C\@P, a one time manual pull completed by C\@P |
 +----------------------------------------------------------------------------+-------------+-----------+------------------------------------------------------------+
 
 **Engineering summary**
