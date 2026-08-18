@@ -14,6 +14,10 @@ date: 2026-08-17
 
   Based on our exploration of the data and our discussions with C\@P, we also found that real world circumstances that are not captured in C\@P's data may also affect the results and interpretation. Of particular note, we found that the volume of applications for shelter significantly outpaces the availability of shelter. Only 14% of applications could ultimately be matched to a stay with C\@P, showing that there is a significant need for shelter in the Salem area community. Additionally, we identified a variety of opportunities where C\@P may want to invest resources to improve outcomes or adjust processes to improve data collection for future analysis.
 
+## Ethics notice
+
+We used data provided by C@P, with their consent. Prior to accessing data, team members filled out applications to serve as volunteers and consented to C@P performing background checks. More information on our ethical considerations and efforts to address data privacy, fairness, and equity can be found in our full write up. 
+
 ## Data Sources
 
 Our data came from three sources, all provided by C\@P, for activity 2024-2025. As summary of our data sources is included below.
@@ -46,6 +50,41 @@ Our data came from three sources, all provided by C\@P, for activity 2024-2025. 
 
   Machine learning algorithms help uncover patterns in data and can be used to develop models to predict specific results (for example, whether a customer will churn, or how long they will take to churn.) We opted to use machine learning to predict the status of a participant's application (successful, returned, or unsuccessful), and what kind of outcome a participant exited to, once they left shelter. We specifically chose to use the XGBoost library, which uses multiple decision trees as the basis of its machine learning model. We used this method because it supports missing values without the need for imputation. We often found missingness throughout our data, so XGBoost was a good fit, especially given that the missingness may simply be because the participant was not required to answer every question in full.
 
+
+## Key Results
+
+### Factors associated with time to get into shelter, or length of stay in shelter
+
+We found notable differences in time spent in or waiting for shelter, depending on:
+  ● Shelter location
+  ● Whether the participant has
+  health coverage (stays only)
+  ● Gender
+  ● Age
+The figure below shows how length of stay before exiting to a positive outcome tends to be longer for the Polk County and Village of Hope sites
+compared to others.
+
+  ![](images/hm_prov.png)
+
+Additionally, our data sources include case management notes that summarize assistance participants were receiving from a case manager We found multiple variables where more engagement appears associated with longer stays in
+shelter. Those factors included:
+  ● Mentions of various key words:
+  “Appointment”, “Medication”,
+  “Identification” and “Benefits.”
+  ● Length of appointments
+  
+We found that these interactions could ultimately be generalized to an “Engagement” metric, which we identified as the total number of appointments. See the figure below to see how time spent in shelter varies depending on how many appointments a paricipant had. 
+
+  ![](images/hm_appts.png)
+
+### Factors associated with positive exits from shelter programs
+
+● Longer stays are positively associated with a positive exit, while shorter stays range from neutral to strongly negative.
+● Participants coming from a ‘place not meant for habitation’ were more likely to have a negative exit.
+● Entry in the 2nd half of the year 2024/2025) is predictive of a positive exit.
+● LDA Topic 3 relates to noncompliance with site rules, and is negatively associated with a positive exit.
+
+  ![](images/exit_top10_features_binary_model.png)
 
 ## Findings
 
