@@ -79,7 +79,7 @@ shelter. Those factors included:
 
   ● Length of appointments
   
-We found that these interactions could ultimately be generalized to an “Engagement” metric, which we identified as the total number of appointments. See the figure below to see how time spent in shelter varies depending on how many appointments a paricipant had. 
+We found that these interactions could ultimately be generalized to an “Engagement” metric, which we identified as the total number of appointments. See the figure below to see how time spent in shelter varies depending on how many appointments a participant had. 
 
   ![](images/hm_appts.png)
 
