@@ -56,11 +56,15 @@ Our data came from three sources, all provided by C\@P, for activity 2024-2025. 
 ### Factors associated with time to get into shelter, or length of stay in shelter
 
 We found notable differences in time spent in or waiting for shelter, depending on:
+
   ● Shelter location
-  ● Whether the participant has
-  health coverage (stays only)
+
+  ● Whether the participant has health coverage (stays only)
+
   ● Gender
+
   ● Age
+
 The figure below shows how length of stay before exiting to a positive outcome tends to be longer for the Polk County and Village of Hope sites
 compared to others.
 
@@ -68,9 +72,9 @@ compared to others.
 
 Additionally, our data sources include case management notes that summarize assistance participants were receiving from a case manager We found multiple variables where more engagement appears associated with longer stays in
 shelter. Those factors included:
-  ● Mentions of various key words:
-  “Appointment”, “Medication”,
-  “Identification” and “Benefits.”
+
+  ● Mentions of various key words: “Appointment”, “Medication”, “Identification” and “Benefits.”
+
   ● Length of appointments
   
 We found that these interactions could ultimately be generalized to an “Engagement” metric, which we identified as the total number of appointments. See the figure below to see how time spent in shelter varies depending on how many appointments a paricipant had. 
@@ -80,8 +84,11 @@ We found that these interactions could ultimately be generalized to an “Engage
 ### Factors associated with positive exits from shelter programs
 
 ● Longer stays are positively associated with a positive exit, while shorter stays range from neutral to strongly negative.
+
 ● Participants coming from a ‘place not meant for habitation’ were more likely to have a negative exit.
+
 ● Entry in the 2nd half of the year 2024/2025) is predictive of a positive exit.
+
 ● LDA Topic 3 relates to noncompliance with site rules, and is negatively associated with a positive exit.
 
   ![](images/exit_top10_features_binary_model.png)
