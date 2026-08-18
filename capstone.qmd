@@ -53,6 +53,8 @@ Our data came from three sources, all provided by C\@P, for activity 2024-2025. 
 
 ## Key Results
 
+The following are brief highlights of our primary findings. However, we encourage reviewing the full write up for a complete discussion of how we interpret these results and the real world context that may affect them. 
+
 ### Factors associated with time to get into shelter, or length of stay in shelter
 
 We found notable differences in time spent in or waiting for shelter, depending on:
@@ -70,7 +72,7 @@ compared to others.
 
   ![](images/hm_prov.png)
 
-Additionally, our data sources include case management notes that summarize assistance participants were receiving from a case manager We found multiple variables where more engagement appears associated with longer stays in
+Additionally, our data sources include case management notes that summarize assistance participants were receiving from a case manager. We found multiple variables where more engagement appears associated with longer stays in
 shelter. Those factors included:
 
   ● Mentions of various key words: “Appointment”, “Medication”, “Identification” and “Benefits.”
